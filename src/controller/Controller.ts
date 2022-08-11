@@ -1,23 +1,18 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import FolderHelper from '../helper/FolderHelper';
-import ItemHelper from '../helper/ItemHelper';
-import UserHelper from '../helper/UserHelper';
-import CreateFolderRequest from '../model/folder/CreateFolderRequest';
-import UpdateFolderRequest from '../model/folder/UpdateFolderRequest';
-import WebResponse from '../model/WebResponse';
-import CreateItemRequest from '../model/item/CreateItemRequest';
-import UpdateItemRequest from '../model/item/UpdateItemRequest';
-import CreateUserRequest from '../model/user/CreateUserRequest';
-import UpdateUserRequest from '../model/user/UpdateUserRequest';
+import * as dotenv from 'dotenv';
 
-const port = 3000;
+dotenv.config();
 
+const port = parseInt(process.env.PORT || '');
 const fastify = Fastify();
+
 fastify.register(cors, {
 	origin: '*',
 });
+fastify.register(require('@fastify/multipart'));
 
+fastify.register(require('./ItemManager'), { prefix: 'gw/im' });
 fastify.register(require('./FolderRoutes'), { prefix: 'gw/folder' }); //folder routes
 fastify.register(require('./ItemRoutes'), { prefix: 'gw/item' }); //item routes
 fastify.register(require('./UserRoutes'), { prefix: 'gw/user' }); //user routes

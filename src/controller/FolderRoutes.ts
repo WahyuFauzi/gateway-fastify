@@ -2,11 +2,12 @@ import FolderHelper from '../helper/FolderHelper';
 import CreateFolderRequest from '../model/folder/CreateFolderRequest';
 import UpdateFolderRequest from '../model/folder/UpdateFolderRequest';
 import WebResponse from '../model/WebResponse';
+import JWTImpl from '../settings/JSONWebTokenImpl';
 
 const axiosFolder = new FolderHelper();
 
 export default async function (fastify) {
-	fastify.post('/gateway/folder', async (req, reply) => {
+	fastify.post('/', async (req, reply) => {
 		const createFolderRequest: CreateFolderRequest = new CreateFolderRequest(
 			req.body
 		);
@@ -21,12 +22,12 @@ export default async function (fastify) {
 		});
 	});
 
-	fastify.get('/gateway/folder/:folderId', async (req: any, reply) => {
+	fastify.get('/:folderId', async (req: any, reply) => {
 		const res = await axiosFolder.getFolder(req.params.folderId);
 		reply.send(new WebResponse<any>(res.statusText, res.status, res.data));
 	});
 
-	fastify.put('/gateway/folder/:folderId', async (req: any, reply) => {
+	fastify.put('/:folderId', async (req: any, reply) => {
 		const updateFolderRequest: UpdateFolderRequest = new UpdateFolderRequest(
 			req.body
 		);
@@ -41,7 +42,7 @@ export default async function (fastify) {
 			});
 	});
 
-	fastify.delete('/gateway/folder/:folderId', async (req: any, reply) => {
+	fastify.delete('/:folderId', async (req: any, reply) => {
 		axiosFolder.deleteFolder(req.params.folderId).then(() => {
 			reply.send({
 				status: 'OK',
