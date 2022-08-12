@@ -22,32 +22,32 @@ export default async function (fastify) {
 		});
 	});
 
-	fastify.get('/:folderId', async (req: any, reply) => {
-		const res = await axiosFolder.getFolder(req.params.folderId);
+	fastify.get('/', async (req: any, reply) => {
+		const res = await axiosFolder.getFolder(req.query.folderId);
 		reply.send(new WebResponse<any>(res.statusText, res.status, res.data));
 	});
 
-	fastify.put('/:folderId', async (req: any, reply) => {
+	fastify.put('/', async (req: any, reply) => {
 		const updateFolderRequest: UpdateFolderRequest = new UpdateFolderRequest(
 			req.body
 		);
 		axiosFolder
-			.updateFolder(req.params.folderId, updateFolderRequest)
+			.updateFolder(req.query.folderId, updateFolderRequest)
 			.then(() => {
 				reply.send({
 					status: 'OK',
 					code: 200,
-					data: `folder with id: ${req.params.folderId} has been updated`,
+					data: `folder with id: ${req.query.folderId} has been updated`,
 				});
 			});
 	});
 
-	fastify.delete('/:folderId', async (req: any, reply) => {
-		axiosFolder.deleteFolder(req.params.folderId).then(() => {
+	fastify.delete('/', async (req: any, reply) => {
+		axiosFolder.deleteFolder(req.query.folderId).then(() => {
 			reply.send({
 				status: 'OK',
 				code: 200,
-				data: `folder with id: ${req.params.folderId} has been deleted`,
+				data: `folder with id: ${req.query.folderId} has been deleted`,
 			});
 		});
 	});

@@ -21,34 +21,34 @@ export default async function (fastify) {
 		});
 	});
 
-	fastify.get('/:itemId', async (req: any, reply) => {
-		axiosItem.getItem(req.params.itemId).then((res) => {
+	fastify.get('/', async (req: any, reply) => {
+		axiosItem.getItem(req.query.itemId).then((res) => {
 			reply.send(new WebResponse<any>(res.statusText, res.status, res.data));
 		});
 	});
 
-	fastify.put('/:itemId', async (req: any, reply) => {
+	fastify.put('/', async (req: any, reply) => {
 		const updateItemRequest: UpdateItemRequest = new UpdateItemRequest(
 			req.body
 		);
-		axiosItem.updateItem(req.params.itemId, updateItemRequest).then((res) => {
+		axiosItem.updateItem(req.query.itemId, updateItemRequest).then((res) => {
 			reply.send(
 				new WebResponse<string>(
 					res.statusText,
 					res.status,
-					'item name has been changed'
+					`item with id: ${req.query.itemId} has been updated`
 				)
 			);
 		});
 	});
 
-	fastify.delete('/:itemId', async (req: any, reply) => {
-		axiosItem.deleteItem(req.params.itemId).then((res) => {
+	fastify.delete('/', async (req: any, reply) => {
+		axiosItem.deleteItem(req.query.itemId).then((res) => {
 			reply.send(
 				new WebResponse<string>(
 					res.statusText,
 					res.status,
-					`item with id:${req.params.itemId} has been deleted`
+					`item with id:${req.query.itemId} has been deleted`
 				)
 			);
 		});

@@ -12,10 +12,10 @@ fastify.register(cors, {
 });
 fastify.register(require('@fastify/multipart'));
 
-fastify.register(require('./ItemManager'), { prefix: 'gw/im' });
-fastify.register(require('./FolderRoutes'), { prefix: 'gw/folder' }); //folder routes
-fastify.register(require('./ItemRoutes'), { prefix: 'gw/item' }); //item routes
-fastify.register(require('./UserRoutes'), { prefix: 'gw/user' }); //user routes
+fastify.register(require('../routes/ItemManager'), { prefix: 'gw/im' });
+fastify.register(require('../routes/FolderRoutes'), { prefix: 'gw/folder' }); //folder routes
+fastify.register(require('../routes/ItemRoutes'), { prefix: 'gw/item' }); //item routes
+fastify.register(require('../routes/UserRoutes'), { prefix: 'gw/user' }); //user routes
 
 // start gateway
 const start = async () => {
@@ -28,4 +28,5 @@ const start = async () => {
 		process.exit(1);
 	}
 };
+
 start();
