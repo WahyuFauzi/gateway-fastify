@@ -1,7 +1,7 @@
 export default class CreateUserRequest {
-	constructor(responseBody: any) {
-		(this.email = responseBody.email), (this.password = responseBody.password);
-		this.user_name = responseBody.user_name;
+	constructor(requestBody: any) {
+		(this.email = requestBody.email), (this.password = requestBody.password);
+		this.user_name = requestBody.user_name;
 	}
 	email: string;
 	password: string;

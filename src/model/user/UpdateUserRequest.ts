@@ -1,10 +1,10 @@
 export default class UpdateUserRequest {
-	constructor(responseBody: any) {
-		(this.password = responseBody.password),
-			(this.user_name = responseBody.user_name);
-		(this.subscribed_space = responseBody.subscribed_space),
-			(this.used_space = responseBody.used_space);
-		this.recycle_bin = responseBody.recycle_bin;
+	constructor(requestBody: any) {
+		(this.password = requestBody.password),
+			(this.user_name = requestBody.user_name);
+		(this.subscribed_space = requestBody.subscribed_space),
+			(this.used_space = requestBody.used_space);
+		this.recycle_bin = requestBody.recycle_bin;
 	}
 
 	password: string;

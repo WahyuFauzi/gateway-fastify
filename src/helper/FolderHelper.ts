@@ -3,7 +3,7 @@ import CreateFolderRequest from '../model/folder/CreateFolderRequest';
 import UpdateFolderRequest from '../model/folder/UpdateFolderRequest';
 
 export default class FolderHelper {
-	folderUrl = 'http://localhost:3003/api/v1/folder';
+	private folderUrl = 'http://localhost:3003/api/v1/folder';
 
 	async createFolder(createFolderRequest: CreateFolderRequest): Promise<any> {
 		return new Promise((resolve, reject) => {
@@ -21,12 +21,12 @@ export default class FolderHelper {
 	async getFolder(folderId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(`${this.folderUrl}/${folderId}`)
+				.get(`${this.folderUrl}/?folderId=${folderId}`)
 				.then((response) => {
 					resolve(response);
 				})
-				.catch((err) => {
-					reject(err);
+				.catch((error) => {
+					reject(error);
 				});
 		});
 	}
@@ -37,7 +37,7 @@ export default class FolderHelper {
 	): Promise<any> {
 		return new Promise((resolve, reject) => {
 			axios
-				.put(`${this.folderUrl}/${folderId}`, updateFolderRequest)
+				.put(`${this.folderUrl}/?folderId=${folderId}`, updateFolderRequest)
 				.then((response) => {
 					resolve(response);
 				})
@@ -50,7 +50,7 @@ export default class FolderHelper {
 	async deleteFolder(folderId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
 			axios
-				.delete(`${this.folderUrl}/${folderId}`)
+				.delete(`${this.folderUrl}/?folderId=${folderId}`)
 				.then((response) => {
 					resolve(response);
 				})

@@ -2,7 +2,7 @@ import axios from 'axios';
 import CreateItemRequest from '../model/item/CreateItemRequest';
 import UpdateItemRequest from '../model/item/UpdateItemRequest';
 export default class ItemHelper {
-	itemUrl = 'http://localhost:3003/api/v1/item';
+	private itemUrl = 'http://localhost:3003/api/v1/item';
 
 	async createItem(createItemRequest: CreateItemRequest): Promise<any> {
 		return new Promise((resolve, reject) => {

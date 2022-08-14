@@ -1,6 +1,6 @@
 export default class UpdateFolderRequest {
-	constructor(responseBody: any) {
-		this.item_name = responseBody.item_name;
+	constructor(requestBody: any) {
+		this.item_name = requestBody.item_name;
 	}
 
 	item_name: string;

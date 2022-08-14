@@ -1,6 +1,6 @@
 export default class CreateFolderRequest {
-	constructor(responseBody: any) {
-		this.folder_name = responseBody.folder_name;
+	constructor(requestBody: any) {
+		this.folder_name = requestBody.folder_name;
 	}
 	folder_name: string;
 }
