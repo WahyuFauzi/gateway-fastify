@@ -1,63 +1,43 @@
-import UserHelper from '../helper/UserHelper';
 import WebResponse from '../model/WebResponse';
 import CreateUserRequest from '../model/user/CreateUserRequest';
 import UpdateUserRequest from '../model/user/UpdateUserRequest';
 import JWTClass from '../settings/JsonWebTokenImpl';
+import axios from 'axios';
 
 export default class UserController {
-	constructor(axiosUser: UserHelper, JsonWebToken: JWTClass) {
-		(this.axiosUser = axiosUser), (this.JsonWebToken = JsonWebToken);
-	}
-
-	private axiosUser: UserHelper;
-	private JsonWebToken: JWTClass;
-
-	createUser(req, reply) {
+	private userUrl = 'http://localhost:3003/api/v1/user';
+	async createUser(req, reply) {
 		const createUserRequest: CreateUserRequest = new CreateUserRequest(
 			req.body
 		);
-		this.axiosUser.createUser(createUserRequest).then((res) => {
-			reply.send(
-				new WebResponse<string>(
-					res.statusText,
-					res.status,
-					'user has been created'
-				)
-			);
-		});
+		const res = await axios.post(this.userUrl, createUserRequest);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
-	getUser(req: any, reply) {
-		this.axiosUser.getUser(req.query.userId).then((res) => {
-			reply.send(new WebResponse<any>(res.statusText, res.status, res.data));
-		});
+	async getUser(req: any, reply) {
+		const res = await axios.get(`${this.userUrl}/?userId=${req.query.userId}`);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
-	updateUser(req: any, reply) {
+	async updateUser(req: any, reply) {
 		const updateUserRequest: UpdateUserRequest = new UpdateUserRequest(
 			req.body
 		);
-		this.axiosUser
-			.updateUser(req.query.userId, updateUserRequest)
-			.then((res) => {
-				reply.send(
-					new WebResponse<string>(
-						res.statusText,
-						res.status,
-						`user data with id:${req.query.userId} name has been changed`
-					)
-				);
-			});
+		const res = await axios.put(
+			`${this.userUrl}/?userId=${req.query.userId}`,
+			updateUserRequest
+		);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
-	deleteUser(req: any, reply) {
-		this.axiosUser.deleteUser(req.query.userId).then((res) => {
-			reply.send(
-				new WebResponse<string>(
-					res.statusText,
-					res.status,
-					`user with id:${req.query.userId} has been deleted`
-				)
-			);
-		});
+
+	async deleteUser(req: any, reply) {
+		axios.get(`${this.userUrl}/?userId=${req.query.userId}`);
+		reply.send(
+			new WebResponse(
+				'OK',
+				200,
+				`user with id: ${req.query.params} has been deleted`
+			)
+		);
 	}
 }

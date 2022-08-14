@@ -1,68 +1,47 @@
 import WebResponse from '../model/WebResponse';
 import CreateItemRequest from '../model/item/CreateItemRequest';
 import UpdateItemRequest from '../model/item/UpdateItemRequest';
-import ItemHelper from '../helper/ItemHelper';
-import JWTClass from '../settings/JsonWebTokenImpl';
+import axios from 'axios';
 
 export default class ItemController {
-	constructor(axiosItem: ItemHelper, JsonWebToken: JWTClass) {
-		(this.axiosItem = axiosItem), (this.JsonWebToken = JsonWebToken);
-	}
+	private itemUrl = 'http://localhost:3003/api/v1/item';
 
-	private axiosItem: ItemHelper;
-	private JsonWebToken: JWTClass;
-
-	createItem(req, reply) {
-		this.JsonWebToken.verify(req, reply);
+	async createItem(req, reply) {
 		const createItemRequest: CreateItemRequest = new CreateItemRequest(
 			req.body
 		);
-		this.axiosItem.createItem(createItemRequest).then((res) => {
-			reply.send(
-				new WebResponse<string>(
-					res.statusText,
-					res.status,
-					'item has been uploaded'
-				)
-			);
-		});
+
+		const res = await axios.post(this.itemUrl, createItemRequest);
+
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
-	getItem(req: any, reply) {
-		this.JsonWebToken.verify(req, reply);
-		this.axiosItem.getItem(req.query.itemId).then((res) => {
-			reply.send(new WebResponse<any>(res.statusText, res.status, res.data));
-		});
+	async getItem(req: any, reply) {
+		const res = await axios.get(`${this.itemUrl}/?itemId=${req.query.itemId}`);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
-	updateItem(req: any, reply) {
-		this.JsonWebToken.verify(req, reply);
+	async updateItem(req: any, reply) {
 		const updateItemRequest: UpdateItemRequest = new UpdateItemRequest(
 			req.body
 		);
-		this.axiosItem
-			.updateItem(req.query.itemId, updateItemRequest)
-			.then((res) => {
-				reply.send(
-					new WebResponse<string>(
-						res.statusText,
-						res.status,
-						`item with id: ${req.query.itemId} has been updated`
-					)
-				);
-			});
+
+		const res = await axios.put(
+			`${this.itemUrl}/?itemId=${req.query.itemId}`,
+			updateItemRequest
+		);
+
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
-	deleteItem(req: any, reply) {
-		this.JsonWebToken.verify(req, reply);
-		this.axiosItem.deleteItem(req.query.itemId).then((res) => {
-			reply.send(
-				new WebResponse<string>(
-					res.statusText,
-					res.status,
-					`item with id:${req.query.itemId} has been deleted`
-				)
-			);
-		});
+	async deleteItem(req: any, reply) {
+		axios.delete(`${this.itemUrl}/?itemId=${req.query.itemId}`);
+		reply.send(
+			new WebResponse(
+				'OK',
+				200,
+				`item with id: ${req.query.params} has been deleted`
+			)
+		);
 	}
 }

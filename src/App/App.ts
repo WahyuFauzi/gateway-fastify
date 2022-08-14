@@ -17,7 +17,7 @@ fastify.register(require('@fastify/multipart'));
 
 //fastify.register(require('../routes/ItemManagerRoutes'), { prefix: 'gw/im' });
 fastify.register(require('../routes/FolderRoutes'), { prefix: 'gw/folder' }); //folder routes
-//fastify.register(require('../routes/ItemRoutes'), { prefix: 'gw/item' }); //item routes
-//fastify.register(require('../routes/UserRoutes'), { prefix: 'gw/user' }); //user routes
+fastify.register(require('../routes/ItemRoutes'), { prefix: 'gw/item' }); //item routes
+fastify.register(require('../routes/UserRoutes'), { prefix: 'gw/user' }); //user routes
 
 export default fastify;

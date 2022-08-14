@@ -1,64 +1,46 @@
-import FolderHelper from '../helper/FolderHelper';
 import CreateFolderRequest from '../model/folder/CreateFolderRequest';
 import UpdateFolderRequest from '../model/folder/UpdateFolderRequest';
 import JwtImplement from '../settings/JsonWebTokenImpl';
 import WebResponse from '../model/WebResponse';
-
-const axiosFolder = new FolderHelper();
+import axios from 'axios';
 
 export default class FolderController {
-	createFolder(req, reply) {
+	private folderUrl = 'http://localhost:3003/api/v1/folder';
+
+	async createFolder(req, reply) {
 		const createFolderRequest: CreateFolderRequest = new CreateFolderRequest(
 			req.body
 		);
-
-		axiosFolder.createFolder(createFolderRequest).then((res) => {
-			//const token = JwtImplement.signJWT(res.data.data.id);
-			reply.send(
-				new WebResponse<string>(res.statusText, res.status, res.data.data)
-			);
-		});
+		const res = await axios.post(this.folderUrl, createFolderRequest);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
-	getFolder(req, reply) {
-		axiosFolder.getFolder(req.query.folderId).then((res) => {
-			//reply.cookie('csrf', JsonWebToken.signJWT(res.data.data.id));
-			reply.send(
-				new WebResponse<string>(res.statusText, res.status, res.data.data)
-			);
-		});
+	async getFolder(req, reply) {
+		const res = await axios.get(
+			`${this.folderUrl}/?folderId=${req.query.params}`
+		);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
 	async updateFolder(req, reply) {
 		const updateFolderRequest: UpdateFolderRequest = new UpdateFolderRequest(
 			req.body
 		);
-
-		//JsonWebToken.verify(req, reply);
-
-		axiosFolder
-			.updateFolder(req.query.folderId, updateFolderRequest)
-			.then((res) => {
-				reply.send(
-					new WebResponse<string>(res.statusText, res.status, res.data.data)
-				);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		const res = await axios.put(
+			`${this.folderUrl}/?folderId=${req.query.params}`,
+			updateFolderRequest
+		);
+		reply.send(new WebResponse(res.statusText, res.status, res.data.data));
 	}
 
 	async deleteFolder(req, reply) {
-		//JsonWebToken.verify(req, reply);
-
-		axiosFolder.deleteFolder(req.query.folderId).then((res) => {
-			reply.send(
-				new WebResponse<string>(
-					res.statusText,
-					res.status,
-					`folder with id: ${req.query.folderId} has been deleted`
-				)
-			);
-		});
+		axios.delete(`${this.folderUrl}/?folderId=${req.query.params}`);
+		reply.send(
+			new WebResponse(
+				'OK',
+				200,
+				`folder with id: ${req.query.params} has been deleted`
+			)
+		);
 	}
 }

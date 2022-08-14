@@ -1,13 +1,8 @@
 import FolderController from '../src/Controller/FolderController';
-import FolderHelper from '../src/helper/FolderHelper';
-import CreateFolderRequest from '../src/model/folder/CreateFolderRequest';
-import JWTClass from '../src/settings/JsonWebTokenImpl';
+import axios from 'axios';
 
-jest.mock('../src/helper/FolderHelper');
-jest.mock('../src/settings/JsonWebTokenImpl');
+jest.mock('axios');
 
-const helper = new FolderHelper();
-const jwt = new JWTClass();
 const controller = new FolderController();
 
 const dummyRequest = {
@@ -29,14 +24,6 @@ const dummyResponse = {
 	},
 };
 
-const createFolderRequestDummy: CreateFolderRequest = new CreateFolderRequest(
-	dummyRequest.body
-);
-
-const mockedValue = {
-	dummy: 'dummy',
-};
-
 const reply = {
 	send: jest.fn(),
 	cookie: jest.fn(),
@@ -44,36 +31,29 @@ const reply = {
 
 describe('FolderController - UnitTestCase', () => {
 	it('create folder run with expected params', async () => {
-		jest
-			.spyOn(helper, 'createFolder')
-			.mockImplementation(jest.fn(() => Promise.resolve(dummyResponse)));
+		jest.spyOn(axios, 'post').mockResolvedValue(dummyResponse);
+
 		const spec = jest.spyOn(controller, 'createFolder');
 		controller.createFolder(dummyRequest, reply);
 		expect(spec).toBeCalledWith(dummyRequest, reply);
 	});
 
 	it('get folder run with expected params', async () => {
-		jest
-			.spyOn(helper, 'getFolder')
-			.mockImplementation(jest.fn(() => Promise.resolve(dummyResponse)));
+		jest.spyOn(axios, 'get').mockResolvedValue(dummyResponse);
 		const spec = jest.spyOn(controller, 'getFolder');
 		controller.getFolder(dummyRequest, reply);
 		expect(spec).toBeCalledWith(dummyRequest, reply);
 	});
 
 	it('update folder run with expected params', async () => {
-		jest
-			.spyOn(helper, 'updateFolder')
-			.mockImplementation(jest.fn(() => Promise.resolve(dummyResponse)));
+		jest.spyOn(axios, 'put').mockResolvedValue(dummyResponse);
 		const spec = jest.spyOn(controller, 'updateFolder');
 		controller.updateFolder(dummyRequest, reply);
 		expect(spec).toBeCalledWith(dummyRequest, reply);
 	});
 
 	it('delete folder run with expected params', async () => {
-		jest
-			.spyOn(helper, 'deleteFolder')
-			.mockImplementation(jest.fn(() => Promise.resolve(dummyResponse)));
+		jest.spyOn(axios, 'delete').mockResolvedValue({});
 		const spec = jest.spyOn(controller, 'deleteFolder');
 		controller.deleteFolder(dummyRequest, reply);
 		expect(spec).toBeCalledWith(dummyRequest, reply);

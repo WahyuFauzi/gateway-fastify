@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import WebResponse from '../model/WebResponse';
 dotenv.config();
 
-class JWTClass {
+export default class JWTClass {
 	signJWT(id) {
 		const token = jwt.sign({ id: id }, process.env.SECRET_KEY, {
 			algorithm: 'RS256',
@@ -27,7 +27,3 @@ class JWTClass {
 		return decoded;
 	}
 }
-
-const JwtImplement = new JWTClass();
-
-export default JwtImplement;
